@@ -1398,7 +1398,7 @@ function toast(msg,type='ok'){
 // ═══════════════════════════════
 async function loadHomeStatus(){
   try{
-    const r=await fetch(`${API}/auth/status/${UID}`);
+    const r=await fetch(`avtopassbot-production.up.railway.app/auth/status/${UID}`);
     const d=await r.json();
     renderHomeConn(d);
   }catch(e){
@@ -1417,7 +1417,7 @@ function renderHomeConn(d){
   }
 }
 async function disconnect(){
-  try{ await fetch(`${API}/auth/disconnect/${UID}`,{method:'POST'}); }catch(e){}
+  try{ await fetch(`avtopassbot-production.up.railway.app/auth/disconnect/${UID}`,{method:'POST'}); }catch(e){}
   toast('Akkaunt uzildi','ok'); loadHomeStatus();
 }
 
@@ -1427,7 +1427,7 @@ async function disconnect(){
 async function startFw(){
   let connected=false;
   try{
-    const r=await fetch(`${API}/auth/status/${UID}`);
+    const r=await fetch(`avtopassbot-production.up.railway.app/auth/status/${UID}`);
     const d=await r.json();
     connected=d.connected;
   }catch(e){}
@@ -1465,7 +1465,7 @@ async function sendCode(){
   const btn=document.getElementById('btn-code');
   btn.disabled=true; btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Yuborilmoqda...';
   try{
-    const r=await fetch(`${API}/auth/send_code`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:UID,phone})});
+    const r=await fetch(`avtopassbot-production.up.railway.app/auth/send_code`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:UID,phone})});
     const d=await r.json();
     if(d.ok){ pendingPhone=phone; phoneCodeHash=d.phone_code_hash; setConnStep(2); toast('<i class="fa-solid fa-check"></i> Kod yuborildi','ok'); }
     else toast(d.detail||'Xato','err');
@@ -1479,7 +1479,7 @@ async function verifyCode(){
   const code=document.getElementById('inp-code').value.trim();
   if(code.length!==5){toast('<i class="fa-solid fa-circle-exclamation"></i> 5 xonali kod kiriting','err');return;}
   try{
-    const r=await fetch(`${API}/auth/verify_code`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:UID,phone:pendingPhone,code,phone_code_hash:phoneCodeHash})});
+    const r=await fetch(`avtopassbot-production.up.railway.app/auth/verify_code`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:UID,phone:pendingPhone,code,phone_code_hash:phoneCodeHash})});
     const d=await r.json();
     if(d.ok){ toast('<i class="fa-solid fa-check"></i> Ulandi!','ok'); await loadChats(); go('s-src'); }
     else if(d.need_password){ setConnStep(3); }
@@ -1490,7 +1490,7 @@ async function verifyPass(){
   const pw=document.getElementById('inp-pass').value;
   if(!pw){toast('Parol kiriting','err');return;}
   try{
-    const r=await fetch(`${API}/auth/verify_password`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:UID,password:pw})});
+    const r=await fetch(`avtopassbot-production.up.railway.app/auth/verify_password`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:UID,password:pw})});
     const d=await r.json();
     if(d.ok){ toast('<i class="fa-solid fa-check"></i> Ulandi!','ok'); await loadChats(); go('s-src'); }
     else toast("Noto'g'ri parol",'err');
@@ -1507,7 +1507,7 @@ function togglePass(){
 // ═══════════════════════════════
 async function loadChats(){
   try{
-    const r=await fetch(`${API}/chats/${UID}`);
+    const r=await fetch(`avtopassbot-production.up.railway.app/chats/${UID}`);
     const d=await r.json();
     allChats=d.chats;
   }catch(e){ loadDemoChats(); }
@@ -1636,7 +1636,7 @@ async function createRule(){
     created:new Date().toLocaleDateString('uz-UZ')
   };
   try{
-    const r=await fetch(`${API}/rules/add`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:UID,...rule})});
+    const r=await fetch(`avtopassbot-production.up.railway.app/rules/add`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:UID,...rule})});
     const d=await r.json();
     if(d.ok){ rules.push(rule); saveRules(); toast('<i class="fa-solid fa-check"></i> Qoida yaratildi!','ok'); go('s-rsettings'); }
     else showAdminModal();
